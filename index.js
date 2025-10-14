@@ -310,6 +310,10 @@ app.post('/api/contact', async (req, res) => {
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
+app.get('/', (req, res) => {
+  res.send('✅ Odell Backend is running! Use /api/contact or /api/health.');
+});
+
 
 // Start server
 app.listen(PORT, () => {
