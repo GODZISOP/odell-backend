@@ -6,8 +6,15 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Constants
+const FRONTEND_URL = 'https://odell-front-q62w.vercel.app';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [FRONTEND_URL, 'http://localhost:3000'],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -15,13 +22,13 @@ app.use(express.urlencoded({ extended: true }));
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
-  secure: false, // true for 465, false for other ports
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
   tls: {
-    rejectUnauthorized: false, // Fix for self-signed certificate error
+    rejectUnauthorized: false,
   },
 });
 
@@ -59,7 +66,7 @@ app.post('/api/contact', async (req, res) => {
     // Email to admin (you)
     const adminMailOptions = {
       from: process.env.EMAIL_USER,
-      to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+      to: ADMIN_EMAIL,
       subject: `🎓 New Inquiry: ${subject}`,
       html: `
         <!DOCTYPE html>
@@ -310,12 +317,12 @@ app.post('/api/contact', async (req, res) => {
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
-app.get('/', (req, res) => {
-  res.send('✅ Odell Backend is rhgunning! Use /api/contact or /api/health.');
-});
 
+app.get('/', (req, res) => {
+  res.send('✅ Odell Backend is running! Use /api/contact or /api/health.');
+});
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on portt ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
