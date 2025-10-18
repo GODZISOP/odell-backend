@@ -26,7 +26,7 @@ app.use(cors({
 }));
 
 // ADMIN EMAIL - All inquiries will be sent here
-const ADMIN_EMAIL = 'appointmentstudio@gmail.com';
+const ADMIN_EMAIL = 'oglennenterprises@gmail.com';
 
 // Middleware
 app.use(express.json());
