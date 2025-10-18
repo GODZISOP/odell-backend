@@ -82,9 +82,9 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    // Email to admin (appointmentstudio@gmail.com)
+    // Email to admin (oglennenterprises@gmail.com)
     const adminMailOptions = {
-      from: `"Dr. Odell Glenn - OGLENN ENTERPRISES" <${process.env.EMAIL_USER}>`, // Shows as "Dr. Odell Glenn" instead of shabbirzain
+      from: `"Dr. Odell Glenn - OGLENN ENTERPRISES" <${process.env.EMAIL_USER}>`,
       to: ADMIN_EMAIL,
       replyTo: email,
       subject: `🎓 New Inquiry: ${subject}`,
@@ -166,7 +166,7 @@ app.post('/api/contact', async (req, res) => {
 
     // Confirmation email to user
     const userMailOptions = {
-      from: `"Dr. Odell Glenn - OGLENN ENTERPRISES" <${process.env.EMAIL_USER}>`, // Shows as "Dr. Odell Glenn" instead of shabbirzain
+      from: `"Dr. Odell Glenn - OGLENN ENTERPRISES" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: '🎓 Thank You for Your Inquiry - Dr. Odell Glenn',
       html: `
