@@ -251,7 +251,7 @@ app.post('/api/contact', async (req, res) => {
             <div class="footer">
               <div class="social-links">
                 <a href="https://www.oglenninternational.com">🌐 Website</a>
-                <a href="mailto:appointmentstudio@gmail.com">📧 Email</a>
+                <a href="mailto:oglennenterprises@gmail.com">📧 Email</a>
               </div>
               <p style="margin: 10px 0;">
                 <strong>OGLENN ENTERPRISES, LLC</strong><br>
