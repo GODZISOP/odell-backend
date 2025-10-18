@@ -7,7 +7,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Constants
-const FRONTEND_URL = 'https://odell-front-q62w.vercel.app';
+const FRONTEND_URLS = [
+  'https://www.oglenninternational.com',
+  'https://oglenninternational.com', // optional if you want root domain
+  'http://localhost:3000',
+];
+
+app.use(cors({ origin: FRONTEND_URLS, credentials: true }));
+
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
 
 // Middleware
