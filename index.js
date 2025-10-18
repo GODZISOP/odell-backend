@@ -38,8 +38,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.EMAIL_USER, // shabbirzain email
+    pass: process.env.EMAIL_PASS, // shabbirzain app password
   },
   tls: {
     rejectUnauthorized: false,
@@ -51,14 +51,20 @@ transporter.verify((error, success) => {
   if (error) {
     console.error('Email transporter error:', error);
   } else {
-    console.log('Server is ready to send emails');
-    console.log(`Admin emails will be sent to: ${ADMIN_EMAIL}`);
+    console.log('✅ Server is ready to send emails');
+    console.log(`📧 Sending FROM: Dr. Odell Glenn <${process.env.EMAIL_USER}>`);
+    console.log(`📬 Sending TO: ${ADMIN_EMAIL}`);
   }
 });
 
 // Contact form endpoint
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
+
+  console.log('📨 Contact form submission received:');
+  console.log('Name:', name);
+  console.log('Email:', email);
+  console.log('Subject:', subject);
 
   if (!name || !email || !subject || !message) {
     return res.status(400).json({
@@ -78,9 +84,9 @@ app.post('/api/contact', async (req, res) => {
   try {
     // Email to admin (appointmentstudio@gmail.com)
     const adminMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"Dr. Odell Glenn - OGLENN ENTERPRISES" <${process.env.EMAIL_USER}>`, // Shows as "Dr. Odell Glenn" instead of shabbirzain
       to: ADMIN_EMAIL,
-      replyTo: email, // This allows you to reply directly to the sender
+      replyTo: email,
       subject: `🎓 New Inquiry: ${subject}`,
       html: `
         <!DOCTYPE html>
@@ -160,7 +166,7 @@ app.post('/api/contact', async (req, res) => {
 
     // Confirmation email to user
     const userMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"Dr. Odell Glenn - OGLENN ENTERPRISES" <${process.env.EMAIL_USER}>`, // Shows as "Dr. Odell Glenn" instead of shabbirzain
       to: email,
       subject: '🎓 Thank You for Your Inquiry - Dr. Odell Glenn',
       html: `
