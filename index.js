@@ -25,7 +25,8 @@ app.use(cors({
   credentials: true,
 }));
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+// ADMIN EMAIL - All inquiries will be sent here
+const ADMIN_EMAIL = 'appointmentstudio@gmail.com';
 
 // Middleware
 app.use(express.json());
@@ -51,6 +52,7 @@ transporter.verify((error, success) => {
     console.error('Email transporter error:', error);
   } else {
     console.log('Server is ready to send emails');
+    console.log(`Admin emails will be sent to: ${ADMIN_EMAIL}`);
   }
 });
 
@@ -74,10 +76,11 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    // Email to admin
+    // Email to admin (appointmentstudio@gmail.com)
     const adminMailOptions = {
       from: process.env.EMAIL_USER,
       to: ADMIN_EMAIL,
+      replyTo: email, // This allows you to reply directly to the sender
       subject: `🎓 New Inquiry: ${subject}`,
       html: `
         <!DOCTYPE html>
@@ -93,6 +96,7 @@ app.post('/api/contact', async (req, res) => {
             .value { color: #334155; }
             .message-box { background: #f1f5f9; padding: 20px; border-radius: 8px; margin-top: 20px; }
             .footer { text-align: center; margin-top: 20px; color: #64748b; font-size: 12px; }
+            .reply-info { background: #dbeafe; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #2563eb; }
           </style>
         </head>
         <body>
@@ -103,6 +107,12 @@ app.post('/api/contact', async (req, res) => {
             </div>
             <div class="content">
               <p style="font-size: 16px; color: #1e3a8a; font-weight: 600;">You have received a new inquiry from your website.</p>
+              
+              <div class="reply-info">
+                <p style="margin: 0; font-size: 14px;">
+                  <strong>💡 Quick Reply:</strong> You can reply directly to this email to respond to ${name}.
+                </p>
+              </div>
               
               <div class="field">
                 <div class="label">Name:</div>
@@ -132,13 +142,15 @@ app.post('/api/contact', async (req, res) => {
                     month: 'long', 
                     day: 'numeric',
                     hour: '2-digit',
-                    minute: '2-digit'
+                    minute: '2-digit',
+                    timeZoneName: 'short'
                   })}
                 </p>
               </div>
             </div>
             <div class="footer">
               <p>This email was sent from your website contact form at oglenninternational.com</p>
+              <p style="margin-top: 10px; color: #94a3b8;">Sent to: ${ADMIN_EMAIL}</p>
             </div>
           </div>
         </body>
@@ -233,7 +245,7 @@ app.post('/api/contact', async (req, res) => {
             <div class="footer">
               <div class="social-links">
                 <a href="https://www.oglenninternational.com">🌐 Website</a>
-                <a href="mailto:${ADMIN_EMAIL}">📧 Email</a>
+                <a href="mailto:appointmentstudio@gmail.com">📧 Email</a>
               </div>
               <p style="margin: 10px 0;">
                 <strong>OGLENN ENTERPRISES, LLC</strong><br>
@@ -256,6 +268,8 @@ app.post('/api/contact', async (req, res) => {
     await transporter.sendMail(adminMailOptions);
     await transporter.sendMail(userMailOptions);
 
+    console.log(`✅ Email sent successfully to admin (${ADMIN_EMAIL}) and user (${email})`);
+
     res.status(200).json({
       success: true,
       message: 'Message sent successfully! We will get back to you soon.',
@@ -272,14 +286,19 @@ app.post('/api/contact', async (req, res) => {
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Server is running' });
+  res.status(200).json({ 
+    status: 'OK', 
+    message: 'Server is running',
+    adminEmail: ADMIN_EMAIL 
+  });
 });
 
 app.get('/', (req, res) => {
-  res.send('✅ Odell Backend is running! Use /api/contact or /api/health.');
+  res.send(`✅ Odell Backend is running! Use /api/contact or /api/health. Admin email: ${ADMIN_EMAIL}`);
 });
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`Admin notifications will be sent to: ${ADMIN_EMAIL}`);
 });
